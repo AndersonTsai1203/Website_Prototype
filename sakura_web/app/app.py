@@ -1,8 +1,8 @@
 import nfc
 import time
 
-# 靜態子網域 URL 模板
-STATIC_SUBDOMAIN_TEMPLATE = "https://nfc.example.com/?uid={uid}"
+# 定義靜態子網域模板
+STATIC_SUBDOMAIN_TEMPLATE = "https://nfc.sakurahighschool.com/?uid={uid}"
 
 def generate_url(uid):
     """
@@ -12,25 +12,24 @@ def generate_url(uid):
 
 def on_connect(tag):
     """
-    NFC 晶片連接時執行的邏輯
+    當 NFC 晶片連接時執行的邏輯
     """
     try:
         # 獲取晶片的 UID
-        uid = tag.identifier.hex().upper()
+        uid = tag.identifier.hex().upper()  # 將 UID 轉為大寫十六進制
         print(f"檢測到 UID：{uid}")
         
         # 生成 URL
         unique_url = generate_url(uid)
         print(f"生成的靜態子網域 URL：{unique_url}")
         
-        # 檢查是否支援 NDEF
-        if tag.ndef:
-            # 建立 URI 記錄並寫入
+        # 寫入 URL 到 NFC 晶片
+        if tag.ndef:  # 檢查晶片是否支援 NDEF
             record = nfc.ndef.UriRecord(unique_url)
             tag.ndef.records = [record]
-            print("成功寫入 URL 到 NFC 晶片！")
+            print("成功將 URL 寫入到 NFC 晶片！")
         else:
-            print("此卡片不支援 NDEF 格式")
+            print("錯誤：此卡片不支援 NDEF 格式")
     except Exception as e:
         print(f"寫入失敗：{str(e)}")
     return False
