@@ -81,5 +81,15 @@ def write_to_nfc():
                 print(f"讀取器錯誤：{str(e)}")
             time.sleep(1)  # 防止快速重複操作
 
+def login_app():
+    # get email address and password
+    # check if the email is existed in the database, if yes, then check password, else go to "sign up"
+    return True
+
+def signup_app():
+    # get username, email address, and create password confirm password
+    # check if the email address is existed in the database, if yes, then go to "login", else create new account
+    return True
+
 if __name__ == "__main__":
     write_to_nfc()
