@@ -1,11 +1,14 @@
 certifi==2024.12.14
+cffi==1.17.1
 charset-normalizer==3.4.1
+cryptography==44.0.0
 idna==3.10
 libusb1==3.2.0
 ndeflib==0.3.3
 nfcpy==1.0.4
 numpy==2.2.1
 pandas==2.2.3
+pycparser==2.22
 pyDes==2.0.1
 pynfc==0.1.1
 pyscard==2.2.0

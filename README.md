@@ -6,7 +6,7 @@ a website application prototype to make the current version of application more 
 2. NFC cards
 
 ## Set up Guide
-Note: In this case, I'm using <b>Ubuntu 24.04 LTS distribution<b>
+Note: In my case, I'm using <b>Ubuntu 24.04 LTS distribution<b>
 
 1. Open terminal, run
     ```
