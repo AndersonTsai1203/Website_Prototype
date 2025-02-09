@@ -1,0 +1,30 @@
+{
+    "cards": [
+        {
+            "uid": "1A696B843118FB",
+            "counter": "00000000",
+            "registered": false
+        },
+        {
+            "uid": "FB89744ABCF626",
+            "counter": "00000000",
+            "registered": false
+        },
+        {
+            "uid": "43F77F8846668A",
+            "counter": "00000000",
+            "registered": false
+        },
+        {
+            "uid": "A8C61744BBE690",
+            "counter": "00000000",
+            "registered": false
+        },
+        {
+            "uid": "C835AAE23F4FE1",
+            "counter": "00000000",
+            "registered": false
+        }
+    ],
+    "users": []
+}
