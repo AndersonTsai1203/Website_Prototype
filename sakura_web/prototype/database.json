@@ -1,30 +1,38 @@
 {
     "cards": [
         {
-            "uid": "1A696B843118FB",
+            "uid": "1ECA7F32D8B3E6",
+            "counter": "00000000",
+            "registered": true
+        },
+        {
+            "uid": "CD33DCED4534D9",
             "counter": "00000000",
             "registered": false
         },
         {
-            "uid": "FB89744ABCF626",
+            "uid": "44309731307DF9",
             "counter": "00000000",
             "registered": false
         },
         {
-            "uid": "43F77F8846668A",
+            "uid": "031B8D4FF19CE7",
             "counter": "00000000",
             "registered": false
         },
         {
-            "uid": "A8C61744BBE690",
-            "counter": "00000000",
-            "registered": false
-        },
-        {
-            "uid": "C835AAE23F4FE1",
+            "uid": "8DDF447AEEC1F3",
             "counter": "00000000",
             "registered": false
         }
     ],
-    "users": []
+    "users": [
+        {
+            "username": "anderson",
+            "password": "1203",
+            "cards": [
+                "1ECA7F32D8B3E6"
+            ]
+        }
+    ]
 }
