@@ -27,10 +27,15 @@ def validate_uid_ctr(uid, ctr):
         # 卡片不存在系統裡
         return False, 1, "Error - Card not found in system..."
 
-    if ctr == 0 or ctr > int(card["counter"]):
+    if ctr == 0:
+        # 卡片第一次被開通 or # URL 內的 UID 符合系統儲存的 UID & URL 內的 CTR > 系統儲存的 CTR
+        return True, 2, "Access Granted - Card Verified."
+
+    if ctr > int(card["counter"]):
         # Update counter
-        ctr += 1  # Increment counter
-        card["counter"] = f"{ctr:08d}" # Keep 8-digit format
+        temp_ctr = int(card["counter"])
+        temp_ctr += 1  # Increment counter
+        card["counter"] = f"{temp_ctr:08d}" # Keep 8-digit format
         helper.save_database(db)
 
         # 卡片第一次被開通 or # URL 內的 UID 符合系統儲存的 UID & URL 內的 CTR > 系統儲存的 CTR
@@ -48,7 +53,7 @@ def login():
     """ User login verification. """
     db = helper.load_database()
     
-    username = input("Enter username: ")
+    username = input("\nEnter username: ")
     password = getpass.getpass("Enter password: ")  # Hide password input
 
     user = next((user for user in db["users"] if user["username"] == username and user["password"] == password), None)
@@ -127,11 +132,13 @@ def main():
             # Step 1: Extract UID, CTR, and ENC
             print("\n--- Step 1: Extracting UID, CTR, and ENC ---")
             _, uid, ctr, enc = helper.parse_sdm_url(given_url)
-
+            time.sleep(2)
+            
             # Step 2: Validate ENC
             print("\n--- Step 2: Validating ENC ---")
             if not validate_enc(uid, ctr, enc):
                 print("\nAccess Denied - URL 內的 ENC 驗證失敗，UID 或 CTR 不匹配")
+                time.sleep(2)
                 next_new_url = helper.generate_next_sdm_url(helper.BASE_URL, given_url)
                 print(f"\nStep 7 - Next SDM URL: {next_new_url}")
                 continue  # Loop back to Step 1
@@ -145,7 +152,8 @@ def main():
             if not validation:
                 if flag == 0:
                     # URL 內的 CTR <= 系統儲存的 CTR
-                    print(f"\n{validation_message}")  
+                    print(f"\n{validation_message}")
+                    time.sleep(2)  
                     next_new_url = helper.generate_next_sdm_url(helper.BASE_URL, given_url)
                     print(f"\nStep 7 - Next SDM URL: {next_new_url}")
                     continue  # Loop back to Step 1
