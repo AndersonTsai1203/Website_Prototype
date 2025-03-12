@@ -25,11 +25,11 @@ def validate_uid_ctr(uid, ctr):
     card = next((card for card in db["cards"] if card["uid"] == uid), None)
     if not card:
         # 卡片不存在系統裡
-        return False, 1, "Error - Card not found in system..."
+        return False, 1, "Error - 卡片不存在系統裡..."
 
     if ctr == 0:
         # 卡片第一次被開通 or # URL 內的 UID 符合系統儲存的 UID & URL 內的 CTR > 系統儲存的 CTR
-        return True, 2, "Access Granted - Card Verified."
+        return True, 2, "審核通過 - 卡片已被驗證."
 
     if ctr > int(card["counter"]):
         # Update counter
@@ -39,7 +39,7 @@ def validate_uid_ctr(uid, ctr):
         helper.save_database(db)
 
         # 卡片第一次被開通 or # URL 內的 UID 符合系統儲存的 UID & URL 內的 CTR > 系統儲存的 CTR
-        return True, 2, "Access Granted - Card Verified."
+        return True, 2, "審核通過 - 卡片已被驗證."
     
     # Update counter
     ctr += 1  # Increment counter
@@ -47,7 +47,7 @@ def validate_uid_ctr(uid, ctr):
     helper.save_database(db)
 
     # URL 內的 CTR <= 系統儲存的 CTR
-    return False, 0, "Access Denied - Counter too low."
+    return False, 0, "審核失敗 - Counter值太低."
 
 def login():
     """ User login verification. """
@@ -66,14 +66,14 @@ def signup():
 
     username = input("\nEnter new username: ")
     if any(user["username"] == username for user in db["users"]):
-        return None, "Access Denied - User already exists!"
+        return None, "審核失敗 - User already exists!"
 
     password = getpass.getpass("Enter new password: ")
     db["users"].append({"username": username, "password": password, "cards": []})
 
     helper.save_database(db)
 
-    return username, "Access Granted - User registered successfully!"
+    return username, "審核通過 - User registered successfully!"
 
 def logout():
     """ Logout the current user """
@@ -107,12 +107,12 @@ def verify_card_ownership(username, uid):
         card["registered"] = True
         user["cards"].append(uid)
         helper.save_database(db)
-        return True, f"Access Granted - Card {uid} assigned to {username}."
+        return True, f"審核通過 - Card {uid} assigned to {username}."
 
     if uid in user["cards"]:
-        return True, f"Access Granted - User {username} already owns card {uid}."
+        return True, f"審核通過 - User {username} already owns card {uid}."
 
-    return False, f"Access Denied - Card {uid} is already registered to another user."
+    return False, f"審核失敗 - Card {uid} is already registered to another user."
 
 
 def main():
@@ -137,13 +137,13 @@ def main():
             # Step 2: Validate ENC
             print("\n--- Step 2: Validating ENC ---")
             if not validate_enc(uid, ctr, enc):
-                print("\nAccess Denied - URL 內的 ENC 驗證失敗，UID 或 CTR 不匹配")
+                print("\n審核失敗 - URL 內的 ENC 驗證失敗，UID 或 CTR 不匹配")
                 time.sleep(2)
                 next_new_url = helper.generate_next_sdm_url(helper.BASE_URL, given_url)
                 print(f"\nStep 7 - Next SDM URL: {next_new_url}")
                 continue  # Loop back to Step 1
             else:
-                print(f"\nAccess Granted - URL 內的 ENC 驗證成功，UID 和 CTR 正確")
+                print(f"\n審核通過 - URL 內的 ENC 驗證成功，UID 和 CTR 正確")
                 time.sleep(2)
 
             # Step 3: Validate UID and CTR
