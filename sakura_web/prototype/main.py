@@ -66,19 +66,19 @@ def signup():
 
     username = input("\nEnter new username: ")
     if any(user["username"] == username for user in db["users"]):
-        return None, "審核失敗 - User already exists!"
+        return None, "審核失敗 - 該用戶已經存在系統裡!"
 
     password = getpass.getpass("Enter new password: ")
     db["users"].append({"username": username, "password": password, "cards": []})
 
     helper.save_database(db)
 
-    return username, "審核通過 - User registered successfully!"
+    return username, "審核通過 - 用戶登記成功!"
 
 def logout():
     """ Logout the current user """
     global current_user
-    message = f"User {current_user} has been logged out."
+    message = f"用戶 {current_user} 已被登出."
     current_user = None  # Reset user
     return message
 
@@ -96,23 +96,23 @@ def verify_card_ownership(username, uid):
 
     user = next((user for user in db["users"] if user["username"] == username), None)
     if not user:
-        return False, "Error - User not found!"
+        return False, "Error - 查詢不到該用戶!"
 
     card = next((card for card in db["cards"] if card["uid"] == uid), None)
     if not card:
-        return False, "Error - Card not registered in the system!"
+        return False, "Error - 該卡片沒有被登記在系統裡!"
     
     if not card["registered"]:
         # Card is not assigned -> Assign it to the user
         card["registered"] = True
         user["cards"].append(uid)
         helper.save_database(db)
-        return True, f"審核通過 - Card {uid} assigned to {username}."
+        return True, f"審核通過 - 卡片序號 {uid} 登記在 {username}."
 
     if uid in user["cards"]:
-        return True, f"審核通過 - User {username} already owns card {uid}."
+        return True, f"審核通過 - 用戶 {username} 已經擁有 {uid}."
 
-    return False, f"審核失敗 - Card {uid} is already registered to another user."
+    return False, f"審核失敗 - 卡片序號 {uid} 已經登記在其他用戶."
 
 
 def main():
@@ -130,12 +130,12 @@ def main():
 
         try:
             # Step 1: Extract UID, CTR, and ENC
-            print("\n--- Step 1: Extracting UID, CTR, and ENC ---")
+            print("\n--- Step 1: 解析 UID, CTR, and ENC ---")
             _, uid, ctr, enc = helper.parse_sdm_url(given_url)
             time.sleep(2)
             
             # Step 2: Validate ENC
-            print("\n--- Step 2: Validating ENC ---")
+            print("\n--- Step 2: 正在驗證 ENC ---")
             if not validate_enc(uid, ctr, enc):
                 print("\n審核失敗 - URL 內的 ENC 驗證失敗，UID 或 CTR 不匹配")
                 time.sleep(2)
@@ -147,7 +147,7 @@ def main():
                 time.sleep(2)
 
             # Step 3: Validate UID and CTR
-            print("\n--- Step 3: Validating UID and CTR ---")
+            print("\n--- Step 3: 正在驗證 UID and CTR ---")
             validation, flag, validation_message = validate_uid_ctr(uid, ctr)
             if not validation:
                 if flag == 0:
@@ -166,29 +166,29 @@ def main():
                 time.sleep(2)
 
             # Step 4: User Login or Signup Choice
-            print("\n--- Step 4: User Login or Signup ---")
+            print("\n--- Step 4: 用戶登入 or 登記 ---")
             while True:
-                choice = input("\nDo you want to [1] Login or [2] Signup? (Enter 1 or 2): ").strip()
+                choice = input("\nDo you want to [1] 登入 or [2] 登記? (Enter 1 or 2): ").strip()
                 if choice == "1":
                     username = login()
                     if username:
                         current_user = username
                         break
-                    print("\nLogin failed: Incorrect username or password. Try again.")
+                    print("\n登入失敗: 錯誤用戶名 or 密碼. 請重新嘗試.")
                 elif choice == "2":
                     username, signup_message = signup()
                     if username:
                         current_user = username
                         print(f"\n{signup_message}")
                         break
-                    print("\nSignup failed: User already exists. Try again.")
+                    print("\n登記失敗: 該用戶已經存在系統裡. 請重新嘗試.")
                 else:
-                    print("\nInvalid choice. Please enter '1' for Login or '2' for Signup.")
+                    print("\n錯誤選項. 請輸入 '1' for 登入 or '2' for 登記.")
 
             time.sleep(2)
 
             # Step 5: Verify if the card is assigned or assign it
-            print("\n--- Step 5: Verifying Card Ownership ---")
+            print("\n--- Step 5: 正在驗證卡片持有者 ---")
             card_ownership, card_ownership_message = verify_card_ownership(username, uid)
             if not card_ownership:
                 print(f"{card_ownership_message}. Jumping to Step 7...")
@@ -196,16 +196,16 @@ def main():
                 print(f"\nStep 7 - Next SDM URL: {next_new_url}")
                 continue  # Loop back to Step 1
             else:
-                print(f"\nCard ownership verified: {card_ownership_message}")
+                print(f"\n卡片持有者驗證結果: {card_ownership_message}")
 
             while True:
                 # After login or signup - Simulate user "using the application"
-                print(f"\n{current_user} is using the application...")
+                print(f"\n{current_user} 正在使用該應用程式中...")
                 time.sleep(5)
 
                 # Step 6 Logout choice:
                 # Ask the user if they want to logout
-                logout_choice = input("\nDo you want to logout? (yes/no): ").strip().lower()
+                logout_choice = input("\nDo you want to 登出? (yes/no): ").strip().lower()
                 if logout_choice == 'yes':
                     logout_message = logout()
                     print(f"\n--- Step 6: {logout_message} - Jumping to Step 7... ---")
